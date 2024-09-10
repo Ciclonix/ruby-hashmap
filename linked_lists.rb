@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Node
-  attr_accessor :value, :next_node
+  attr_accessor :key, :value, :next_node
 
-  def initialize(value = nil, next_node = nil)
+  def initialize(key = nil, value = nil, next_node = nil)
+    @key = key
     @value = value
     @next_node = next_node
   end
@@ -18,17 +19,17 @@ class LinkedList
     @node_num = 0
   end
 
-  def append(value)
+  def append(key, value)
     if head.nil?
-      @head = Node.new(value)
+      @head = Node.new(key, value)
     else
-      tail.next_node = Node.new(value)
+      tail.next_node = Node.new(key, value)
     end
     @node_num += 1
   end
 
-  def prepend(value)
-    @head = Node.new(value, head)
+  def prepend(key, value)
+    @head = Node.new(key, value, head)
     @node_num += 1
   end
 
@@ -54,19 +55,21 @@ class LinkedList
     @node_num -= 1
   end
 
-  def contains?(value)
+  def contains?(key)
     node = head
     size.times do
-      return true if node.value == value
+      return true if node.key == key
       node = node.next_node
     end
     return false
   end
 
-  def find(value)
+  def find(key, value = false)
     node = head
     size.times do |idx|
-      return idx if node.value == value
+      if node.key == key
+        return value ? node.value : idx
+      end
       node = node.next_node
     end
     return nil
@@ -76,18 +79,18 @@ class LinkedList
     string = ""
     node = head
     size.times do
-      string += "( #{node.value} ) -> "
+      string += "( #{node.key} ) -> "
       node = node.next_node
     end
     return string += "nil"
   end
 
-  def insert_at(value, index)
+  def insert_at(key, value, index)
     if index.zero?
-      prepend(value)
+      prepend(key, value)
     else
       node_pre = at(index - 1)
-      node_pre.next_node = Node.new(value, node_pre.next_node)
+      node_pre.next_node = Node.new(key, value, node_pre.next_node)
       @node_num += 1
     end
   end
