@@ -1,10 +1,14 @@
+require_relative "linked_lists"
+
 class HashMap
-  :attr_reader :capacity
+  attr_reader :capacity
+
+  INITIAL_CAPACITY = 3
+  LOAD_FACTOR = 0.75
 
   def initialize
-    INITIAL_CAPACITY = @capacity = 16
-    LOAD_FACTOR = 0.75
-    @buckets = Array.new(INITIAL_CAPACITY)
+    @capacity = INITIAL_CAPACITY
+    @buckets = Array.new(INITIAL_CAPACITY) { LinkedList.new }
   end
 
   def hash(key)
@@ -14,9 +18,28 @@ class HashMap
     return hash_code
   end
 
-  def hash_index(key)
+  def hashIndex(key)
     index = hash(key) % capacity
     raise ArgumentError if index.negative? || index >= capacity
     return index
+  end
+
+  def set(key, value)
+    @buckets[hashIndex(key)].append(key, value)
+  end
+
+  def get(key)
+    return @buckets[hashIndex(key)].find(key, true)
+  end
+
+  def has?(key)
+    return @buckets[hashIndex(key)].contains?(key)
+  end
+
+  def remove(key)
+    list = @buckets[hashIndex(key)]
+    return nil if list.nil?
+    list.remove_at(list.find(key))
+    return list
   end
 end
