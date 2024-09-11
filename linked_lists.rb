@@ -41,6 +41,7 @@ class LinkedList
     node = head
     index.times do
       break if node.nil?
+
       node = node.next_node
     end
     return node
@@ -55,6 +56,7 @@ class LinkedList
     node = head
     size.times do
       return true if node.key == key
+
       node = node.next_node
     end
     return false
@@ -66,6 +68,7 @@ class LinkedList
       if node.key == key
         return return_node ? node : idx
       end
+
       node = node.next_node
     end
     return nil
@@ -91,7 +94,7 @@ class LinkedList
     loop do
       return items if node.nil?
 
-      items << case to_get
+      items <<  case to_get
                 when 0
                   node.key
                 when 1

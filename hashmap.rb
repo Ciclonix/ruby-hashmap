@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "linked_lists"
 
 class HashMap
@@ -21,6 +23,7 @@ class HashMap
   def hashIndex(key)
     index = hash(key) % @buckets.length
     raise ArgumentError if index.negative? || index >= @buckets.length
+
     return index
   end
 
@@ -30,13 +33,17 @@ class HashMap
     else
       @buckets[hashIndex(key)].append(key, value)
       @length += 1
-      if length > @buckets.length * LOAD_FACTOR
-        all_entries = entries
-        @buckets = Array.new(@buckets.length * 2) { LinkedList.new }
-        @length = 0
-        all_entries.each { |key, value| set(key, value)}
-      end
+      checkLength
     end
+  end
+
+  def checkLength
+    return unless length > @buckets.length * LOAD_FACTOR
+
+    all_entries = entries
+    @buckets = Array.new(@buckets.length * 2) { LinkedList.new }
+    @length = 0
+    all_entries.each { |key, value| set(key, value) }
   end
 
   def get(key)
@@ -50,6 +57,7 @@ class HashMap
   def remove(key)
     list = @buckets[hashIndex(key)]
     return nil if list.nil?
+
     list.remove_at(list.find(key, false))
     @length -= 1
     return list
