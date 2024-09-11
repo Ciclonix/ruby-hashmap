@@ -7,7 +7,6 @@ class HashMap
   LOAD_FACTOR = 0.75
 
   def initialize
-    @capacity = INITIAL_CAPACITY
     @buckets = Array.new(INITIAL_CAPACITY) { LinkedList.new }
   end
 
@@ -19,8 +18,8 @@ class HashMap
   end
 
   def hashIndex(key)
-    index = hash(key) % capacity
-    raise ArgumentError if index.negative? || index >= capacity
+    index = hash(key) % length
+    raise ArgumentError if index.negative? || index >= length
     return index
   end
 
@@ -41,5 +40,33 @@ class HashMap
     return nil if list.nil?
     list.remove_at(list.find(key))
     return list
+  end
+
+  def length
+    return @buckets.length
+  end
+
+  def clear
+    @buckets = Array.new(INITIAL_CAPACITY) { LinkedList.new }
+  end
+
+  def items(to_get) # 0 = keys, 1 = values, 2 = both
+    items = []
+    @buckets.each do |list|
+      items << list.getItems(to_get).flatten
+    end
+    return items
+  end
+
+  def keys
+    return items(0).flatten
+  end
+
+  def values
+    return items(1).flatten
+  end
+
+  def entries
+    return items(2)[0...-1]
   end
 end
