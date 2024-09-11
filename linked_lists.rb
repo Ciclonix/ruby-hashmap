@@ -23,7 +23,7 @@ class LinkedList
     if head.nil?
       @head = Node.new(key, value)
     else
-      tail.next_node = Node.new(key, value)
+      at(size - 1).next_node = Node.new(key, value)
     end
     @node_num += 1
   end
@@ -35,10 +35,6 @@ class LinkedList
 
   def size
     return @node_num
-  end
-
-  def tail
-    return at(size - 1)
   end
 
   def at(index)
@@ -75,26 +71,6 @@ class LinkedList
     return nil
   end
 
-  def to_s
-    string = ""
-    node = head
-    size.times do
-      string += "( #{node.key} ) -> "
-      node = node.next_node
-    end
-    return string += "nil"
-  end
-
-  def insert_at(key, value, index)
-    if index.zero?
-      prepend(key, value)
-    else
-      node_pre = at(index - 1)
-      node_pre.next_node = Node.new(key, value, node_pre.next_node)
-      @node_num += 1
-    end
-  end
-
   def remove_at(index)
     case index
     when size - 1
@@ -106,6 +82,24 @@ class LinkedList
       node_pre = at(index - 1)
       node_pre.next_node = node_pre.next_node.next_node
       @node_num -= 1
+    end
+  end
+
+  def getItems(to_get) # 0 = keys, 1 = values, 2 = both
+    items = []
+    node = head
+    loop do
+      return items if node.nil?
+      
+      items << case to_get
+                when 0
+                  node.key
+                when 1
+                  node.value
+                when 2
+                  [node.key, node.value]
+                end
+      node = node.next_node
     end
   end
 end
