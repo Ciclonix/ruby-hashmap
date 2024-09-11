@@ -60,11 +60,11 @@ class LinkedList
     return false
   end
 
-  def find(key, value = false)
+  def find(key, return_node = true)
     node = head
     size.times do |idx|
       if node.key == key
-        return value ? node.value : idx
+        return return_node ? node : idx
       end
       node = node.next_node
     end
@@ -90,7 +90,7 @@ class LinkedList
     node = head
     loop do
       return items if node.nil?
-      
+
       items << case to_get
                 when 0
                   node.key
